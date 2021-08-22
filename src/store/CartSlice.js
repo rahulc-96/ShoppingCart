@@ -1,10 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = {items:[], show:false};
+const initialState = {items:[], show:false, cartSize:0, changed:false};
 const CartSlice = createSlice({
     name: "cartSlice",
     initialState,
     reducers:{
+        replaceCart(state, action){
+              state.items = action.payload.items;
+              state.cartSize = action.payload.cartSize;
+        },
         removeFromCart(state,action){
             let itemToBeUpdated = action.payload;
             const existingIndex = state.items.findIndex(item => item.id === itemToBeUpdated.id)
@@ -17,6 +21,8 @@ const CartSlice = createSlice({
                 const updatedState = {...currentState, total: newTotal, quantity: newQty}; 
                 state.items[existingIndex] = updatedState;
             }
+            state.changed = true;
+            state.cartSize -= 1;         
         },
         addToCart(state, action){
          let payload = action.payload;
@@ -24,13 +30,15 @@ const CartSlice = createSlice({
          const existingIndex = state.items.findIndex(item => item.id === itemToBeUpdated.id)
          if (state.items[existingIndex] == null){
              state.items.push(itemToBeUpdated)
-         }else{
+            }else{
              let currentState = state.items[existingIndex];
              const newQty = ++currentState.quantity;
              const newTotal = newQty* currentState.price;
              const updatedState = {...currentState, total: newTotal, quantity: newQty}; 
              state.items[existingIndex] = updatedState;
          }
+         state.cartSize += 1;         
+         state.changed = true;
         },
         toggleCart(state){
             state.show = !state.show;
