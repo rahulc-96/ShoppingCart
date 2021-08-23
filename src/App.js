@@ -17,11 +17,17 @@ function App() {
   const notification = useSelector((state) => state.notificationsSlice.notifications);
   const dispatch = useDispatch();
 
-  setTimeout(() => {
+  
+
+  useEffect(() => {
+    const successTimer = setTimeout(() => {
       if(notification && notification.status === 'success'){
         dispatch(notificationActions.reset())
       }
-  }, 3000)
+  }, 3000);
+
+  return () => clearTimeout(successTimer);
+  }, [notification, dispatch]);
 
   useEffect(() => {
     dispatch(fetchCart());
