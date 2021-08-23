@@ -6,13 +6,15 @@ const NotificationsSlice = createSlice({
   initialState,
   reducers: {
     sendNotification(state, action) {
-      console.log(action.payload)
       state.notifications = {
         status: action.payload.status,
         message: action.payload.message,
         title: action.payload.title,
       };
-    }}
+    },
+  reset(state) {
+    state.notifications = null;
+  }}
 });
 
 export const notificationActions = NotificationsSlice.actions;
